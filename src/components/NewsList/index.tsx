@@ -1,5 +1,3 @@
-import "./styles.css";
-
 type NewsType = {
   id: number;
   title: string;
@@ -23,25 +21,26 @@ function formatUnixTime(unixTime: number): string {
 
 export default function NewsList({ news }: NewsListProps) {
   const render = news.map((item) => {
-    const newsPoint =
-      item.points >= 90
-        ? "newsPointGood"
-        : item.points >= 70
-        ? "newsPointSoso"
-        : "newsPointBad";
-
     const formattedDate = formatUnixTime(item.time);
     return (
       <ul key={item.id}>
-        <div>
-          <a className="newsTitle" href={item.url} target="_blank">
+        <div className="mb-3">
+          <a className="block text-xl rounded-md p-1 hover:bg-gray-300" href={item.url} target="_blank">
             {item.title}
           </a>{" "}
-          기사평가 : <span className={newsPoint}>{item.points} / 100</span>
-          <span> {formattedDate}</span>
-        </div>{" "}
-        <div>
-          작성자 ID : <span className="userName"> {item.user}</span>
+          <div className="text-base p-2">
+            <div>
+              <span>기사평가 : </span>
+              <span className={`${item.points >= 90 ? "text-blue-600" : item.points >= 70 ? "text-orange-300" : "text-red-500"}`}>
+                {item.points} / 100
+              </span>
+              <span> {formattedDate}</span>
+            </div>
+            <div>
+              <span>작성자 ID : </span>
+              <span className="text-base"> {item.user}</span>
+            </div>
+          </div>
         </div>
       </ul>
     );
