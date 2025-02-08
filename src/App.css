@@ -1,3 +1,17 @@
 .App {
   margin: 20px;
 }
+
+.navbarItem {
+  text-decoration: none;
+  color: black;
+  margin-right: 15px;
+  font-size: 25px;
+  font-weight: bold;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.navbarItem:hover {
+  background-color: #cfbdbd;
+}
