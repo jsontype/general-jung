@@ -16,7 +16,7 @@ function App() {
       });
   }, []);
 
-  // console.log(movies);
+  console.log(movies);
 
   const [news, setNews] = useState([]);
 
@@ -28,7 +28,7 @@ function App() {
       });
   }, []);
 
-  console.log(news);
+  // console.log(news);
 
   return (
     <div className="App">

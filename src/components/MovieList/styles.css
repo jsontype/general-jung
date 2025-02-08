@@ -1,0 +1,45 @@
+.movieTitle {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 2rem;
+  text-decoration: none;
+  color: gray;
+  padding: 5px;
+  border-radius: 5px;
+}
+.movieTitle:hover {
+  background: gray;
+  color: white;
+}
+.movieImage {
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.movieYear {
+  font-size: 0.5rem;
+  color: red;
+}
+.movieRankGood {
+  color: blue;
+}
+
+.movieRankSoso {
+  color: yellowgreen;
+}
+
+.movieRankBad {
+  color: red;
+}
+
+.movieGenre {
+  font-size: 1rem;
+}
+
+.movieStoryToggleBtn {
+  color: green;
+}
+
+.movieStoryToggleBtn:hover {
+  color: yellowgreen;
+}
