@@ -1,11 +1,11 @@
-type Article = {
+type NewsType = {
   id: number;
   title: string;
   url: string;
 };
 
 type NewsListProps = {
-  news: Article[];
+  news: NewsType[];
 };
 
 export default function NewsList({ news }: NewsListProps) {
