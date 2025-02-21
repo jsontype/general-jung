@@ -1,4 +1,3 @@
-import "./styles.css";
 import { useState } from "react";
 
 type MovieType = {
@@ -33,10 +32,10 @@ export default function MovieList({ movies }: MovieListProps) {
   const render = movies.map((item) => {
     const movieRank =
       item.rating >= 8
-        ? "movieRankGood"
+        ? "text-blue-500"
         : item.rating >= 6
-        ? "movieRankSoso"
-        : "movieRankBad";
+        ? "text-yellow-500"
+        : "text-red-500";
     const hotIcon = item.rating >= 8 && "🔥";
     // 줄거리 텍스트 처리 로직
     const synopsisText = item.synopsis === "" ? "정보없음" : item.synopsis;
@@ -48,25 +47,27 @@ export default function MovieList({ movies }: MovieListProps) {
 
     return (
       <div key={item.id}>
-        <span>{hotIcon}</span>{" "}
-        <a className="movieTitle" href={item.url}>
-          {item.title} ({item.year})
+        <a
+          className="block mb-[5px] text-3xl no-underline text-gray-500 p-[5px] rounded-md hover:bg-gray-500 hover:text-white"
+          href={item.url}
+        >
+          {item.title} ({item.year}) <span>{hotIcon}</span>
         </a>{" "}
         <span className={movieRank}>
           평점: {item.rating === 0 ? "평점없음" : `${item.rating} / 10`}{" "}
         </span>
-        <div className="movieGenre">
+        <div className="text-base">
           장르: {item.genres.length <= 0 ? "정보없음" : item.genres.join(",")}
         </div>
-        <div className="movieRuntime">
+        <div className="text-base">
           상영시간:{" "}
           {item.runtime === 0 ? "정보없음" : `${String(item.runtime)} min`}
         </div>
-        <div className="movieSynopsys">
+        <div className="text-base">
           줄거리: {displayedSynopsis}
           {isSynopsisLong && (
             <span
-              className="movieStoryToggleBtn"
+              className="text-green-500 hover:text-yellow-500 cursor-pointer"
               onClick={() => toggleSynopsis(item.id)}
             >
               {isOpenStory[item.id] ? " (줄이기)" : " ... (눌러서 자세히 보기)"}
@@ -74,7 +75,7 @@ export default function MovieList({ movies }: MovieListProps) {
           )}
         </div>
         <img
-          className="movieImage"
+          className="w-[100px] mb-[10px]"
           src={item.large_cover_image}
           alt={item.title}
         />
