@@ -1,3 +1,5 @@
+import { memo, useMemo } from "react";
+
 type NewsType = {
   id: number;
   title: string;
@@ -19,32 +21,49 @@ function formatUnixTime(unixTime: number): string {
   return `(${year}-${month}-${day})`;
 }
 
-export default function NewsList({ news }: NewsListProps) {
-  const render = news.map((item) => {
-    const formattedDate = formatUnixTime(item.time);
-    return (
-      <ul key={item.id}>
-        <div className="mb-3">
-          <a className="block text-xl rounded-md p-1 hover:bg-gray-300" href={item.url} target="_blank">
-            {item.title}
-          </a>{" "}
-          <div className="text-base p-2">
-            <div>
-              <span>기사평가 : </span>
-              <span className={`${item.points >= 90 ? "text-blue-600" : item.points >= 70 ? "text-orange-300" : "text-red-500"}`}>
-                {item.points} / 100
-              </span>
-              <span> {formattedDate}</span>
+function NewsList({ news }: NewsListProps) {
+  const render = useMemo(
+    () =>
+      news.map((item) => {
+        const formattedDate = formatUnixTime(item.time);
+        return (
+          <ul key={item.id}>
+            <div className="mb-3">
+              <a
+                className="block text-xl rounded-md p-1 hover:bg-gray-300"
+                href={item.url}
+                target="_blank"
+              >
+                {item.title}
+              </a>{" "}
+              <div className="text-base p-2">
+                <div>
+                  <span>기사평가 : </span>
+                  <span
+                    className={`${
+                      item.points >= 90
+                        ? "text-blue-600"
+                        : item.points >= 70
+                        ? "text-orange-300"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {item.points} / 100
+                  </span>
+                  <span> {formattedDate}</span>
+                </div>
+                <div>
+                  <span>작성자 ID : </span>
+                  <span className="text-base"> {item.user}</span>
+                </div>
+              </div>
             </div>
-            <div>
-              <span>작성자 ID : </span>
-              <span className="text-base"> {item.user}</span>
-            </div>
-          </div>
-        </div>
-      </ul>
-    );
-  });
+          </ul>
+        );
+      }),
+    [news]
+  );
 
   return <>{render}</>;
 }
+export default memo(NewsList);
