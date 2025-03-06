@@ -1,4 +1,5 @@
-import { useState, memo, useMemo } from "react";
+import { useState, memo, useMemo, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 type MovieType = {
   id: number;
@@ -13,21 +14,33 @@ type MovieType = {
 };
 
 type MovieListProps = {
-  movies: MovieType[];
+  initialMovies?: MovieType[];
 };
 
-function MovieList({ movies }: MovieListProps) {
+function MovieList({ initialMovies = [] }: MovieListProps) {
+  const { t } = useTranslation();
   const [isOpenStory, setIsOpenStory] = useState<{ [key: number]: boolean }>(
     {}
   );
+  const [movies, setMovies] = useState<MovieType[]>(initialMovies);
 
+  useEffect(() => {
+    if (initialMovies.length === 0) {
+      fetch("https://yts.mx/api/v2/list_movies.json?sort_by=rating")
+        .then((res) => res.json())
+        .then((json) => {
+          setMovies(json.data.movies);
+        })
+        .catch((error) => console.error("Error fetching movies:", error));
+    }
+  }, [initialMovies]);
   // 줄거리 확장/축소 토글 함수
-  const toggleSynopsis = (id: number) => {
+  const toggleSynopsis = useCallback((id: number) => {
     setIsOpenStory((prev) => ({
       ...prev,
       [id]: !prev[id],
     }));
-  };
+  }, []);
 
   const render = useMemo(
     () =>
@@ -40,7 +53,8 @@ function MovieList({ movies }: MovieListProps) {
             : "text-red-500";
         const hotIcon = item.rating >= 8 && "🔥";
         // 줄거리 텍스트 처리 로직
-        const synopsisText = item.synopsis === "" ? "정보없음" : item.synopsis;
+        const synopsisText =
+          item.synopsis === "" ? t("movies:noSummary") : item.synopsis;
         const isSynopsisLong = synopsisText.length > 300;
         const displayedSynopsis =
           isSynopsisLong && !isOpenStory[item.id]
@@ -56,26 +70,38 @@ function MovieList({ movies }: MovieListProps) {
               {item.title} ({item.year}) <span>{hotIcon}</span>
             </a>{" "}
             <span className={movieRank}>
-              평점: {item.rating === 0 ? "평점없음" : `${item.rating} / 10`}{" "}
+              {t("movies:itemRating")} :{" "}
+              {item.rating === 0
+                ? t("movies:noSummary")
+                : `${item.rating} / 10`}{" "}
             </span>
             <div className="text-base">
-              장르:{" "}
-              {item.genres.length <= 0 ? "정보없음" : item.genres.join(",")}
+              {t("movies:itemGenres")} :{" "}
+              {item.genres.length <= 0
+                ? t("movies:noSummary")
+                : item.genres.join(",")}
             </div>
             <div className="text-base">
-              상영시간:{" "}
-              {item.runtime === 0 ? "정보없음" : `${String(item.runtime)} min`}
+              <div className="text-base">
+                {item.runtime === 0
+                  ? t("movies:noSummary")
+                  : `${t("movies:itemRuntime")}: ${parseInt(
+                      String(item.runtime / 60)
+                    )}${t("movies:itemRuntimeHour")} ${item.runtime % 60}${t(
+                      "movies:itemRuntimeMinute"
+                    )}`}
+              </div>
             </div>
             <div className="text-base">
-              줄거리: {displayedSynopsis}
+              {t("movies:itemSummary")}: {displayedSynopsis}
               {isSynopsisLong && (
                 <span
                   className="text-green-500 hover:text-yellow-500 cursor-pointer"
                   onClick={() => toggleSynopsis(item.id)}
                 >
                   {isOpenStory[item.id]
-                    ? " (줄이기)"
-                    : " ... (눌러서 자세히 보기)"}
+                    ? t("movies:collapse")
+                    : t("movies:expand")}
                 </span>
               )}
             </div>
@@ -87,7 +113,7 @@ function MovieList({ movies }: MovieListProps) {
           </div>
         );
       }),
-    [isOpenStory, movies]
+    [isOpenStory, movies, t, toggleSynopsis]
   );
 
   return <>{render}</>;

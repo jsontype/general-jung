@@ -1,27 +1,38 @@
-import { memo, useMemo } from "react";
+import { memo, useMemo, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type NewsType = {
   id: number;
   title: string;
   url: string;
-  points: number;
+  points?: number;
   time: number;
-  user: string;
+  user?: string;
 };
 
 type NewsListProps = {
-  news: NewsType[];
+  initialNews?: NewsType[];
 };
 
 function formatUnixTime(unixTime: number): string {
   const date = new Date(unixTime * 1000);
   const year = date.getFullYear();
-  const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더함
-  const day = date.getDate();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
   return `(${year}-${month}-${day})`;
 }
 
-function NewsList({ news }: NewsListProps) {
+function NewsList({ initialNews = [] }: NewsListProps) {
+  const [news, setNews] = useState<NewsType[]>(initialNews);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    fetch("https://api.hnpwa.com/v0/news.json")
+      .then((res) => res.json())
+      .then((json) => {
+        setNews(json);
+      });
+  }, []);
   const render = useMemo(
     () =>
       news.map((item) => {
@@ -38,30 +49,42 @@ function NewsList({ news }: NewsListProps) {
               </a>{" "}
               <div className="text-base p-2">
                 <div>
-                  <span>기사평가 : </span>
-                  <span
-                    className={`${
-                      item.points >= 90
-                        ? "text-blue-600"
-                        : item.points >= 70
-                        ? "text-orange-300"
-                        : "text-red-500"
-                    }`}
-                  >
-                    {item.points} / 100
+                  <span>{t("news:itemRating")} : </span>
+                  {item.points === undefined || item.points === 0 ? (
+                    <span>{t("news:noInformation")}</span>
+                  ) : (
+                    <span
+                      className={`${
+                        item.points >= 90
+                          ? "text-blue-600"
+                          : item.points >= 70
+                          ? "text-orange-300"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {item.points} / 100
+                    </span>
+                  )}
+                  <span>
+                    {" "}
+                    {t("news:itemCreateDate")} : {formattedDate}
                   </span>
-                  <span> {formattedDate}</span>
                 </div>
+
                 <div>
-                  <span>작성자 ID : </span>
-                  <span className="text-base"> {item.user}</span>
+                  <span> {t("news:itemUser")}: </span>
+                  {item.user ? (
+                    <span className="text-base">{item.user}</span>
+                  ) : (
+                    <span>{t("news:noInformation")}</span>
+                  )}{" "}
                 </div>
               </div>
             </div>
           </ul>
         );
       }),
-    [news]
+    [news, t]
   );
 
   return <>{render}</>;
