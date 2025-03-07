@@ -1,0 +1,6 @@
+{
+  "title": "Todo App",
+  "itemPlaceholder": "Add a new todo",
+  "itemAddButton": "Add",
+  "itemDeleteButton": "Delete"
+}
