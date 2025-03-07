@@ -46,7 +46,7 @@ function TodoList({ initialTodos = [] }: TodoListProps) {
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="border rounded-md px-2 py-1 mr-2"
+          className="w-50 border rounded-md px-2 py-1 mr-2"
           placeholder={t("todos:itemPlaceholder")}
         />
         <button
@@ -63,10 +63,15 @@ function TodoList({ initialTodos = [] }: TodoListProps) {
               type="checkbox"
               checked={todo.completed}
               onChange={() => toggleTodo(todo.id)}
-              className="mr-2"
+              style={{
+                transform: "scale(1.5)", // 체크박스 크기 조정
+                marginRight: "10px", // 여백 조정
+              }}
             />
+            {/* 너비를 조정하여 삭제 버튼과 가까이 배치합니다. */}
             <span
-              className={`flex-grow ${
+              style={{ width: "40%" }} // 너비를 조정할 수 있습니다.
+              className={`${
                 todo.completed ? "line-through text-gray-500" : ""
               }`}
             >
@@ -74,7 +79,7 @@ function TodoList({ initialTodos = [] }: TodoListProps) {
             </span>
             <button
               onClick={() => deleteTodo(todo.id)}
-              className="bg-red-500 text-white px-2 py-1 rounded-md ml-2"
+              className="bg-red-500 text-white px-2 py-1 rounded-md ml-1"
             >
               {t("todos:itemDeleteButton")}
             </button>

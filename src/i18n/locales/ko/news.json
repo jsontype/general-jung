@@ -1,6 +1,8 @@
 {
   "title": "뉴스 앱",
   "itemRating": "평점",
+  "itemTitle": "제목",
+  "itemDetails": "상세",
   "itemCreateDate": "작성일",
   "itemUser": "사용자"
 }
