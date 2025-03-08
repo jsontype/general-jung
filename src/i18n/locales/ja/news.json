@@ -1,6 +1,8 @@
 {
   "title": "ニュースアプリ",
   "itemRating": "評価",
+  "itemTitle": "タイトル",
+  "itemDetails": "詳細",
   "itemCreateDate": "作成日",
   "itemUser": "ユーザー"
 }

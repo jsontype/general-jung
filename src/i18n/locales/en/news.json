@@ -1,6 +1,8 @@
 {
   "title": "News App",
   "itemRating": "Rating",
+  "itemTitle": "Title",
+  "itemDetails": "Details",
   "itemCreateDate": "Date",
   "noInformation": "No information",
   "itemUser": "User"
