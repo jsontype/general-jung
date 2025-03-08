@@ -1,72 +1,66 @@
-import { useState, memo, useMemo, useEffect, useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import Box from "@mui/system/Box";
-import { FocusTrap } from "@mui/base/FocusTrap";
+import { useState, memo, useMemo, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import Box from '@mui/system/Box'
+import { FocusTrap } from '@mui/base/FocusTrap'
 
 type MovieType = {
-  id: number;
-  title: string;
-  rating: number;
-  url: string;
-  large_cover_image: string;
-  year: number;
-  genres: string[];
-  runtime: number;
-  synopsis: string;
-};
+  id: number
+  title: string
+  rating: number
+  url: string
+  large_cover_image: string
+  year: number
+  genres: string[]
+  runtime: number
+  synopsis: string
+}
 
 type MovieListProps = {
-  initialMovies?: MovieType[];
-};
+  initialMovies?: MovieType[]
+}
 
 function MovieList({ initialMovies = [] }: MovieListProps) {
-  const { t } = useTranslation();
-  const [isOpenStory, setIsOpenStory] = useState<{ [key: number]: boolean }>(
-    {}
-  );
-  const [movies, setMovies] = useState<MovieType[]>(initialMovies);
-  const [index, setFocusedMovieId] = useState<number | null>(null);
+  const { t } = useTranslation()
+  const [isOpenStory, setIsOpenStory] = useState<{ [key: number]: boolean }>({})
+  const [movies, setMovies] = useState<MovieType[]>(initialMovies)
+  const [, setFocusedMovieId] = useState<number | null>(null)
 
   useEffect(() => {
     if (initialMovies.length === 0) {
-      fetch("https://yts.mx/api/v2/list_movies.json?sort_by=rating")
-        .then((res) => res.json())
-        .then((json) => {
-          setMovies(json.data.movies);
+      fetch('https://yts.mx/api/v2/list_movies.json?sort_by=rating')
+        .then(res => res.json())
+        .then(json => {
+          setMovies(json.data.movies)
         })
-        .catch((error) => console.error("Error fetching movies:", error));
+        .catch(error => console.error('Error fetching movies:', error))
     }
-  }, [initialMovies]);
+  }, [initialMovies])
 
   const toggleSynopsis = useCallback((id: number) => {
-    setIsOpenStory((prev) => ({
+    setIsOpenStory(prev => ({
       ...prev,
       [id]: !prev[id],
-    }));
+    }))
     if (!isOpenStory[id]) {
-      setFocusedMovieId(id);
+      setFocusedMovieId(id)
     } else {
-      setFocusedMovieId(null);
+      setFocusedMovieId(null)
     }
-  }, []);
+  }, [isOpenStory, setIsOpenStory, setFocusedMovieId]);
+  
 
   const render = useMemo(
     () =>
-      movies.map((item) => {
+      movies.map(item => {
         const movieRank =
-          item.rating >= 8
-            ? "text-blue-500"
-            : item.rating >= 6
-            ? "text-yellow-500"
-            : "text-red-500";
-        const hotIcon = item.rating >= 8 && "🔥";
-        const synopsisText =
-          item.synopsis === "" ? t("movies:noSummary") : item.synopsis;
-        const isSynopsisLong = synopsisText.length > 300;
+          item.rating >= 8 ? 'text-blue-500' : item.rating >= 6 ? 'text-yellow-500' : 'text-red-500'
+        const hotIcon = item.rating >= 8 && '🔥'
+        const synopsisText = item.synopsis === '' ? t('movies:noSummary') : item.synopsis
+        const isSynopsisLong = synopsisText.length > 300
         const displayedSynopsis =
           isSynopsisLong && !isOpenStory[item.id]
-            ? synopsisText.slice(0, 300) + "..."
-            : synopsisText;
+            ? synopsisText.slice(0, 300) + '...'
+            : synopsisText
 
         return (
           <div
@@ -81,36 +75,30 @@ function MovieList({ initialMovies = [] }: MovieListProps) {
                 {item.title} ({item.year}) <span>{hotIcon}</span>
               </a>
               <span className={movieRank}>
-                {t("movies:itemRating")} :{" "}
-                {item.rating === 0
-                  ? t("movies:noSummary")
-                  : `${item.rating} / 10`}
+                {t('movies:itemRating')} :{' '}
+                {item.rating === 0 ? t('movies:noSummary') : `${item.rating} / 10`}
               </span>
               <div className="text-base mt-2">
-                {t("movies:itemGenres")} :{" "}
-                {item.genres.length <= 0
-                  ? t("movies:noSummary")
-                  : item.genres.join(",")}
+                {t('movies:itemGenres')} :{' '}
+                {item.genres.length <= 0 ? t('movies:noSummary') : item.genres.join(',')}
               </div>
               <div className="text-base mt-2">
                 {item.runtime === 0
-                  ? t("movies:noSummary")
-                  : `${t("movies:itemRuntime")}: ${parseInt(
-                      String(item.runtime / 60)
-                    )}${t("movies:itemRuntimeHour")} ${item.runtime % 60}${t(
-                      "movies:itemRuntimeMinute"
+                  ? t('movies:noSummary')
+                  : `${t('movies:itemRuntime')}: ${parseInt(
+                      String(item.runtime / 60),
+                    )}${t('movies:itemRuntimeHour')} ${item.runtime % 60}${t(
+                      'movies:itemRuntimeMinute',
                     )}`}
               </div>
               <div className="text-base mt-4">
-                {t("movies:itemSummary")}: {displayedSynopsis}
+                {t('movies:itemSummary')}: {displayedSynopsis}
                 {isSynopsisLong && (
                   <span
                     className="text-green-500 hover:text-yellow-500 cursor-pointer"
                     onClick={() => toggleSynopsis(item.id)}
                   >
-                    {isOpenStory[item.id]
-                      ? t("movies:collapse")
-                      : t("movies:expand")}
+                    {isOpenStory[item.id] ? t('movies:collapse') : t('movies:expand')}
                   </span>
                 )}
               </div>
@@ -123,32 +111,29 @@ function MovieList({ initialMovies = [] }: MovieListProps) {
             {isOpenStory[item.id] && (
               <Box
                 sx={{
-                  position: "fixed",
+                  position: 'fixed',
                   top: 0,
                   left: 0,
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
                 <FocusTrap open>
                   <Box
                     tabIndex={-1}
                     sx={{
-                      backgroundColor: "white",
+                      backgroundColor: 'white',
                       p: 2,
-                      maxWidth: "80%",
-                      maxHeight: "80%",
-                      overflowY: "auto",
+                      maxWidth: '80%',
+                      maxHeight: '80%',
+                      overflowY: 'auto',
                     }}
                   >
-                    <button
-                      type="button"
-                      onClick={() => toggleSynopsis(item.id)}
-                    >
+                    <button type="button" onClick={() => toggleSynopsis(item.id)}>
                       Close
                     </button>
                     <p>{synopsisText}</p>
@@ -157,12 +142,12 @@ function MovieList({ initialMovies = [] }: MovieListProps) {
               </Box>
             )}
           </div>
-        );
+        )
       }),
-    [isOpenStory, movies, t, toggleSynopsis]
-  );
+    [isOpenStory, movies, t, toggleSynopsis],
+  )
 
-  return <>{render}</>;
+  return <>{render}</>
 }
 
-export default memo(MovieList);
+export default memo(MovieList)

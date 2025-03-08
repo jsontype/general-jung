@@ -1,31 +1,29 @@
-import { useState, useCallback, memo } from "react";
-import { useTranslation } from "react-i18next";
-import { Box, Typography, Button } from "@mui/material";
+import { useState, useCallback, memo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Box, Typography, Button } from '@mui/material'
 
 type CounterProps = {
-  initialCount?: number;
-};
+  initialCount?: number
+}
 
 function Counter({ initialCount = 0 }: CounterProps) {
-  const { t } = useTranslation();
-  const [count, setCount] = useState<number>(initialCount);
+  const { t } = useTranslation()
+  const [count, setCount] = useState<number>(initialCount)
 
   const increase = useCallback(() => {
-    setCount((prevCount) => prevCount + 1);
-  }, []);
+    setCount(prevCount => prevCount + 1)
+  }, [])
 
   const decrease = useCallback(() => {
-    setCount((prevCount) => prevCount - 1);
-  }, []);
+    setCount(prevCount => prevCount - 1)
+  }, [])
 
   return (
-    <Box sx={{ padding: 4, backgroundColor: "gray.100", borderRadius: 2 }}>
+    <Box sx={{ padding: 4, backgroundColor: 'gray.100', borderRadius: 2 }}>
       <Typography variant="h2" sx={{ marginBottom: 4 }}>
-        {t("counter:title")}
+        {t('counter:title')}
       </Typography>
-      <Box
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-      >
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Button
           variant="contained"
           color="error"
@@ -39,7 +37,7 @@ function Counter({ initialCount = 0 }: CounterProps) {
         >
           -
         </Button>
-        <Typography variant="h4" sx={{ fontSize: 24, fontWeight: "bold" }}>
+        <Typography variant="h4" sx={{ fontSize: 24, fontWeight: 'bold' }}>
           {count}
         </Typography>
         <Button
@@ -57,7 +55,7 @@ function Counter({ initialCount = 0 }: CounterProps) {
         </Button>
       </Box>
     </Box>
-  );
+  )
 }
 
-export default memo(Counter);
+export default memo(Counter)
