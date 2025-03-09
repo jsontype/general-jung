@@ -34,7 +34,7 @@ function MovieList({ initialMovies = [] }: MovieListProps) {
         })
         .catch(error => console.error('Error fetching movies:', error))
     }
-  }, [initialMovies])
+  }, [])
 
   const toggleSynopsis = useCallback((id: number) => {
     setIsOpenStory(prev => ({
