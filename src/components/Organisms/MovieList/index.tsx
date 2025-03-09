@@ -36,18 +36,20 @@ function MovieList({ initialMovies = [] }: MovieListProps) {
     }
   }, [])
 
-  const toggleSynopsis = useCallback((id: number) => {
-    setIsOpenStory(prev => ({
-      ...prev,
-      [id]: !prev[id],
-    }))
-    if (!isOpenStory[id]) {
-      setFocusedMovieId(id)
-    } else {
-      setFocusedMovieId(null)
-    }
-  }, [isOpenStory, setIsOpenStory, setFocusedMovieId]);
-  
+  const toggleSynopsis = useCallback(
+    (id: number) => {
+      setIsOpenStory(prev => ({
+        ...prev,
+        [id]: !prev[id],
+      }))
+      if (!isOpenStory[id]) {
+        setFocusedMovieId(id)
+      } else {
+        setFocusedMovieId(null)
+      }
+    },
+    [isOpenStory, setIsOpenStory, setFocusedMovieId],
+  )
 
   const render = useMemo(
     () =>
